@@ -58,8 +58,8 @@ class JokeScore:
             await self.bot.say("One at a time mate...")
             return False
 
-        if bonus > 10:
-            await self.bot.say("Valid Bonus Values are between 1 and 10")
+        if bonus > 10 or bonus < -10:
+            await self.bot.say("Valid Bonus Values are between -10 and 10")
             return False
 
         user = ctx.message.mentions[0]
