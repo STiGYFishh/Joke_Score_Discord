@@ -1,0 +1,9 @@
+{
+    "AUTHOR" : "STiGYFishh",
+    "SHORT" : "Vote on how shit a Joke is!",
+    "DESCRIPTION" : "A poll system for rating jokes made on Discord",
+    "DISABLED" : false,
+    "NAME" : "Joke Score",
+    "TAGS" : ["polls", "jokes"],
+    "INSTALL_MSG" : "You've Done it Lad"
+}
