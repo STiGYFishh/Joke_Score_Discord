@@ -99,8 +99,6 @@ class JokeScore:
 
         await self.bot.delete_message(react_message)
         await self.save_votes()
-
-        await self.bot.say(self.votes)
             
 
     async def on_reaction_add(self, reaction, user): 
@@ -112,12 +110,10 @@ class JokeScore:
 
                 if reaction.emoji == "\U0001F53C":
                     self.votes[user_id]["total"] += 1
-                    if self.vote_messages[reaction.message.id]["comment"]:
-                        self.votes[user_id]["incidents"][reaction.message.id]["votes"] += 1
+                    self.votes[user_id]["incidents"][reaction.message.id]["votes"] += 1
                 elif reaction.emoji == "\U0001F53D":
                     self.votes[user_id]["total"] -= 1
-                    if self.vote_messages[reaction.message.id]["comment"]:
-                        self.votes[user_id]["incidents"][reaction.message.id]["votes"] -= 1
+                    self.votes[user_id]["incidents"][reaction.message.id]["votes"] -= 1
                 else:
                     await self.bot.remove_reaction(reaction.message,\
                             reaction.emoji, user)
