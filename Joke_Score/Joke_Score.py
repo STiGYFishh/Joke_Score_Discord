@@ -166,7 +166,7 @@ class JokeScore:
                 url="https://github.com/STiGYFishh/Joke_Score_Discord/")
 
         embed.set_thumbnail(url=\
-                "https://sti.gy/i/GitHub-Mark-64px.png")
+                "https://cdn.discordapp.com/emojis/296358609661591552.png?v=1")
         embed.set_footer(text="Joke Score Leaderboard")
 
         leaderboard_text = ""
@@ -213,7 +213,7 @@ class JokeScore:
                 url="https://github.com/STiGYFishh/Joke_Score_Discord/")
 
         embed.set_thumbnail(url=\
-                "https://sti.gy/i/GitHub-Mark-64px.png")
+                "https://cdn.discordapp.com/emojis/296358609661591552.png?v=1")
         embed.set_footer(text=f"Joke Score Incident Report for {user.display_name}")
 
         fields = 0
