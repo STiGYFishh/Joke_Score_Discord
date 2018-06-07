@@ -47,7 +47,7 @@ class JokeScore:
             traceback.print_exc()
 
     @commands.command(name="jokescore", aliases=["js","joke"], pass_context=True)
-    async def joke_score(self , ctx, mention: str, comment = "", bonus = 0):
+    async def joke_score(self , ctx, mention: str, bonus = 0, comment = ""):
         """ Score everyone's jokes. """
         if len(ctx.message.mentions) == 0:
             await self.bot.say("You forgot to mention anyone "
