@@ -61,8 +61,8 @@ class JokeScore:
         if bonus > 10 or bonus < -10:
             await self.bot.say("Valid Bonus Values are between -10 and 10")
             return False
-    		
-    	comment = " ".join(comment, *args)
+        
+        comment = " ".join(comment, *args)
 
         user = ctx.message.mentions[0]
         react_message = ctx.message
