@@ -47,7 +47,7 @@ class JokeScore:
             traceback.print_exc()
 
     @commands.command(name="jokescore", aliases=["js","joke"], pass_context=True)
-    async def joke_score(self , ctx, mention: str, bonus = 0, comment = ""):
+    async def joke_score(self , ctx, mention: str, bonus = 0, comment = "", *args):
         """ Score everyone's jokes. """
         if len(ctx.message.mentions) == 0:
             await self.bot.say("You forgot to mention anyone "
@@ -61,6 +61,8 @@ class JokeScore:
         if bonus > 10 or bonus < -10:
             await self.bot.say("Valid Bonus Values are between -10 and 10")
             return False
+			
+		comment = " ".join(comment, *args)
 
         user = ctx.message.mentions[0]
         react_message = ctx.message
@@ -157,7 +159,54 @@ class JokeScore:
         except KeyError:
             await self.bot.say(\
                     f"Comment not found for user: {user.display_name} with message id: {message_id}")
+					
+	@commands.command(name="jsdelpoll", aliases=["jsdl"], pass_context=True)
+	async def joke_score_delete_poll(self, ctx, mention: str, message_id: int):
+		""" Delete a Previous Poll from a Users History """
+        if len(ctx.message.mentions) == 0:
+            await self.bot.say("You forgot to mention anyone "
+                                f"{ctx.message.author.mention}, you knob")
+            return False
 
+        if len(ctx.message.mentions) > 1:
+            await self.bot.say("One at a time mate...")
+            return False
+
+        user = ctx.message.mentions[0]
+        try:
+			poll_votes = self.votes[user.id]["incidents"][str(message_id)]["comment"]["votes"]
+            self.votes[user.id]["incidents"].pop(str(message_id))
+			self.votes[user.id]["total"] -= poll_votes
+            await self.save_votes()
+
+            await self.bot.say("Poll successfully removed!")
+
+        except KeyError:
+            await self.bot.say(\
+                    f"Poll not found for user: {user.display_name} with message id: {message_id}")
+
+	@commands.command(name="jsdeluser", aliases=["jsdu"], pass_context=True)
+	async def joke_score_delete_user(self, ctx, mention: str):
+		""" Delete a Previous Poll from a Users History """
+        if len(ctx.message.mentions) == 0:
+            await self.bot.say("You forgot to mention anyone "
+                                f"{ctx.message.author.mention}, you knob")
+            return False
+
+        if len(ctx.message.mentions) > 1:
+            await self.bot.say("One at a time mate...")
+            return False
+
+        user = ctx.message.mentions[0]
+        try:
+            self.votes.pop(user.id)
+			
+            await self.save_votes()
+            await self.bot.say("User successfully removed!")
+
+        except KeyError:
+            await self.bot.say(\
+                    f"User not on file: {user.display_name}")
 
     @commands.command(name="jokeleaderboard", aliases=["jstable","jslb"], pass_context=False)
     async def joke_score_leaderboard(self):
