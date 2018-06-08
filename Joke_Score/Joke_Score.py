@@ -14,7 +14,7 @@ class JokeScore:
         self.bot = bot
         self.votes = {}  # trip nested dictionary boiiiiii
         self.vote_messages = {}  # nested dict boiiii
-        self.reactions = ['\U0001F53C', '\U0001F53D']
+        self.reactions = ["\N{UP-POINTING SMALL RED TRIANGLE}", "\N{DOWN-POINTING SMALL RED TRIANGLE}"]
         self.expiry_time = 120  # Time in seconds until a vote expires
 
         self.leaderboard_titles = [
