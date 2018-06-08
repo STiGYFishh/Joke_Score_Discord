@@ -50,7 +50,7 @@ class JokeScore:
 
     @commands.command(name="jokescore",
                       aliases=["js", "joke"], pass_context=True)
-    async def joke_score(self, ctx, mention: str, bonus=0, comment="", *args):
+    async def joke_score(self, ctx, mention: str, *, comment):
         """ Score everyone's jokes. """
         if len(ctx.message.mentions) == 0:
             await self.bot.say(
@@ -62,26 +62,20 @@ class JokeScore:
             await self.bot.say("One at a time mate...")
             return False
 
-        if bonus > 10 or bonus < -10:
-            await self.bot.say("Valid Bonus Values are between -10 and 10")
-            return False
-
-        comment = " ".join(comment, *args)
-
         user = ctx.message.mentions[0]
         react_message = ctx.message
 
         if user.id not in self.votes.keys():
-            self.votes[user.id] = {"total": bonus, "incidents": {}}
+            self.votes[user.id] = {"total": 1, "incidents": {}}
         else:
-            self.votes[user.id]["total"] += bonus
+            self.votes[user.id]["total"] += 1
 
         self.vote_messages[react_message.id] = {
                 "user_id": user.id,
                 "timestamp": int(time.time()),
                 "comment": comment,
-                "votes": bonus,
-                "bonus": bonus
+                "votes": 1,
+                "bonus": 1
                 }
 
         self.votes[user.id]["incidents"][react_message.id] = (
