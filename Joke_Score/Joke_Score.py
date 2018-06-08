@@ -178,12 +178,11 @@ class JokeScore:
 			self.votes[user.id]["incidents"].pop(str(message_id))
 			self.votes[user.id]["total"] -= poll_votes
 			
-            await self.save_votes()
-            await self.bot.say("Poll successfully removed!")
+			await self.save_votes()
+			await self.bot.say("Poll successfully removed!")
 
-        except KeyError:
-            await self.bot.say(\
-                    f"Poll not found for user: {user.display_name} with message id: {message_id}")
+		except KeyError:
+			await self.bot.say(f"Poll not found for user: {user.display_name} with message id: {message_id}")
 
 	@commands.command(name="jsdeluser", aliases=["jsdu"], pass_context=True)
 	async def joke_score_delete_user(self, ctx, mention: str):
@@ -200,10 +199,8 @@ class JokeScore:
         user = ctx.message.mentions[0]
         try:
             self.votes.pop(user.id)
-			
             await self.save_votes()
             await self.bot.say("User successfully removed!")
-
         except KeyError:
             await self.bot.say(\
                     f"User not on file: {user.display_name}")
