@@ -18,12 +18,12 @@ class JokeScore:
         self.expiry_time = 120  # Time in seconds until a vote expires
 
         self.leaderboard_titles = [
-                "Most Boisterous Bois",
-                "Biggest Dickheads",
-                "Best Banter Board",
-                "Silliest Sods",
-                "Funniest Men"
-                ]
+            "Most Boisterous Bois",
+            "Biggest Dickheads",
+            "Best Banter Board",
+            "Silliest Sods",
+            "Funniest Men"
+        ]
 
         self.do_setup()
 
@@ -71,15 +71,15 @@ class JokeScore:
             self.votes[user.id]["total"] += 1
 
         self.vote_messages[react_message.id] = {
-                "user_id": user.id,
-                "timestamp": int(time.time()),
-                "comment": comment,
-                "votes": 1,
-                "bonus": 1
-                }
+            "user_id": user.id,
+            "timestamp": int(time.time()),
+            "comment": comment,
+            "votes": 1,
+            "bonus": 1
+        }
 
         self.votes[user.id]["incidents"][react_message.id] = (
-                self.vote_messages[react_message.id])
+            self.vote_messages[react_message.id])
 
         for reaction in self.reactions:
             await self.bot.add_reaction(react_message, reaction)
@@ -90,13 +90,13 @@ class JokeScore:
 
         await asyncio.sleep(self.expiry_time)
         await self.bot.edit_message(
-                expire_message,
-                "This Joke Poll has Expired the Message ID was: "
-                f"{react_message.id}")
+            expire_message,
+            "This Joke Poll has Expired the Message ID was: "
+            f"{react_message.id}")
 
         self.vote_messages[react_message.id].pop("user_id")
         self.votes[user.id]["incidents"][react_message.id] = (
-                self.vote_messages[react_message.id])
+            self.vote_messages[react_message.id])
 
         self.vote_messages.pop(react_message.id)
 
@@ -213,8 +213,7 @@ class JokeScore:
             await self.save_votes()
             await self.bot.say("User successfully removed!")
         except KeyError:
-            await self.bot.say(
-                    f"User not on file: {user.display_name}")
+            await self.bot.say(f"User not on file: {user.display_name}")
 
     @commands.command(name="jokeleaderboard", aliases=["jstable", "jslb"], pass_context=False)
     async def joke_score_leaderboard(self):
