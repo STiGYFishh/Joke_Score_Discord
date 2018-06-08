@@ -208,7 +208,7 @@ class JokeScore:
 
     @commands.command(name="jsdeluser", aliases=["jsdu"], pass_context=True)
     async def joke_score_delete_user(self, ctx, mention: str):
-    	""" Delete a Previous Poll from a Users History """
+        """ Delete a Previous Poll from a Users History """
         if len(ctx.message.mentions) == 0:
             await self.bot.say(
                 "You forgot to mention anyone "
