@@ -119,12 +119,10 @@ class JokeScore:
 
                 if reaction.emoji == "\U0001F53C":
                     self.votes[user_id]["total"] += 1
-                    self.votes[user_id]["incidents"]
-                    [reaction.message.id]["votes"] += 1
+                    self.votes[user_id]["incidents"][reaction.message.id]["votes"] += 1
                 elif reaction.emoji == "\U0001F53D":
                     self.votes[user_id]["total"] -= 1
-                    self.votes[user_id]["incidents"]
-                    [reaction.message.id]["votes"] -= 1
+                    self.votes[user_id]["incidents"][reaction.message.id]["votes"] -= 1
                 else:
                     await self.bot.remove_reaction(
                         reaction.message,
@@ -141,12 +139,10 @@ class JokeScore:
 
                 if reaction.emoji == "\U0001F53C":
                     self.votes[user_id]["total"] -= 1
-                    self.votes[user_id]["incidents"]
-                    [reaction.message.id]["votes"] -= 1
+                    self.votes[user_id]["incidents"][reaction.message.id]["votes"] -= 1
                 elif reaction.emoji == "\U0001F53D":
                     self.votes[user_id]["total"] += 1
-                    self.votes[user_id]["incidents"]
-                    [reaction.message.id]["votes"] += 1
+                    self.votes[user_id]["incidents"][reaction.message.id]["votes"] += 1
 
     @commands.command(name="jscomment", aliases=["jsc"], pass_context=True)
     async def joke_score_comment(self, ctx, message_id: int, mention: str, comment: str):
@@ -164,8 +160,7 @@ class JokeScore:
         user = ctx.message.mentions[0]
         try:
             old = self.votes[user.id]["incidents"][str(message_id)]["comment"]
-            self.votes[user.id]["incidents"]
-            [str(message_id)]["comment"] = comment
+            self.votes[user.id]["incidents"][str(message_id)]["comment"] = comment
             await self.save_votes()
 
             await self.bot.say(
@@ -193,8 +188,7 @@ class JokeScore:
 
         user = ctx.message.mentions[0]
         try:
-            poll_votes = self.votes[user.id]["incidents"]
-            [str(message_id)]["votes"]
+            poll_votes = self.votes[user.id]["incidents"][str(message_id)]["votes"]
             self.votes[user.id]["incidents"].pop(str(message_id))
             self.votes[user.id]["total"] -= poll_votes
 
