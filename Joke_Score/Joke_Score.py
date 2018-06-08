@@ -111,10 +111,10 @@ class JokeScore:
             if not user.bot and user.id != self.bot.user.id:
                 user_id = self.vote_messages[reaction.message.id]["user_id"]
 
-                if reaction.emoji == "\U0001F53C":
+                if reaction.emoji == "\N{UP-POINTING SMALL RED TRIANGLE}":
                     self.votes[user_id]["total"] += 1
                     self.votes[user_id]["incidents"][reaction.message.id]["votes"] += 1
-                elif reaction.emoji == "\U0001F53D":
+                elif reaction.emoji == "\N{DOWN-POINTING SMALL RED TRIANGLE}":
                     self.votes[user_id]["total"] -= 1
                     self.votes[user_id]["incidents"][reaction.message.id]["votes"] -= 1
                 else:
@@ -131,10 +131,10 @@ class JokeScore:
             if not user.bot and user.id != self.bot.user.id:
                 user_id = self.vote_messages[reaction.message.id]["user_id"]
 
-                if reaction.emoji == "\U0001F53C":
+                if reaction.emoji == "\N{UP-POINTING SMALL RED TRIANGLE}":
                     self.votes[user_id]["total"] -= 1
                     self.votes[user_id]["incidents"][reaction.message.id]["votes"] -= 1
-                elif reaction.emoji == "\U0001F53D":
+                elif reaction.emoji == "\N{DOWN-POINTING SMALL RED TRIANGLE}":
                     self.votes[user_id]["total"] += 1
                     self.votes[user_id]["incidents"][reaction.message.id]["votes"] += 1
 
