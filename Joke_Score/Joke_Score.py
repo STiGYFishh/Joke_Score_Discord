@@ -174,11 +174,11 @@ class JokeScore:
 
         user = ctx.message.mentions[0]
         try:
-			poll_votes = self.votes[user.id]["incidents"][str(message_id)]["comment"]["votes"]
+			poll_votes = self.votes[user.id]["incidents"][str(message_id)]["votes"]
             self.votes[user.id]["incidents"].pop(str(message_id))
 			self.votes[user.id]["total"] -= poll_votes
+			
             await self.save_votes()
-
             await self.bot.say("Poll successfully removed!")
 
         except KeyError:
