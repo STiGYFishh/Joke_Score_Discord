@@ -74,7 +74,7 @@ class JokeScore:
             "Vote will expire in "
             f"{self.expiry_time / 60} minutes!")
 
-        if user.id not in self.votes.keys():
+        if user.id not in self.votes:
             self.votes[user.id] = {"total": 0, "incidents": {}}
 
         self.votes[user.id]["incidents"][react_message.id] = {
@@ -83,16 +83,16 @@ class JokeScore:
             "votes": 0
         }
 
-        for reaction, _ in self.reactions:
+        for reaction in self.reactions:
             await self.bot.add_reaction(react_message, reaction)
 
         def check(reaction, check_user):
             if check_user.id != user.id and not check_user.bot:
-                return str(reaction.emoji) in self.reactions.keys()
+                return str(reaction.emoji) in self.reactions
 
         while self.votes[user.id]["timestamp"] + self.expiry_time > int(time.time()):
             react_event = await self.bot.wait_for_reaction(message=react_message, check=check)
-            if react_event.emoji in self.reactions.keys():
+            if react_event.emoji in self.reactions:
                 self.votes[user.id]["incidents"][react_message.id]["votes"] += self.reactions[react_event.emoji]
 
         await self.bot.say(f'joke\'s over. {self.votes[user.id]["incidents"][react_message.id]["votes"]}')
