@@ -13,7 +13,6 @@ class JokeScore:
     def __init__(self, bot):
         self.bot = bot
         self.votes = {}  # trip nested dictionary boiiiiii
-        self.vote_messages = {}  # nested dict boiiii
         strongo = get(bot.get_all_emojis(), name='strongo')
         self.reactions = {
             "\N{POUTING FACE}":          -3,
