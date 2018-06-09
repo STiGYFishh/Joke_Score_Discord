@@ -80,15 +80,15 @@ class JokeScore:
             "votes": 0
         }
 
-        async for reaction in self.reactions:
+        for reaction in self.reactions:
             await self.bot.add_reaction(poll, reaction)
 
         def check(reaction, check_user):
-            if check_user.id != user.id and not check_user.bot:
-                return reaction.emoji in self.reactions
+            return check_user.id != user.id and not check_user.bot
 
+        valid_emoji = "".join(self.reactions)
         while self.votes[user.id]["incidents"][poll.id]["timestamp"] + self.expiry_time > int(time.time()):
-            react_event = await self.bot.wait_for_reaction(message=poll, check=check, timeout=5)
+            react_event = await self.bot.wait_for_reaction(message=poll, check=check, emoji=valid_emoji, timeout=5)
             if react_event:
                 if react_event.emoji in self.reactions:
                     await self.bot.say(react_event.emoji)
