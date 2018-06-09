@@ -76,7 +76,7 @@ class JokeScore:
 
         self.votes[user.id]["incidents"][poll.id] = {
             "timestamp": int(time.time()),
-            "comment": comment,
+            "comment": "".join(comment),
             "voters": {}
         }
 
@@ -180,7 +180,7 @@ class JokeScore:
         except KeyError:
             await self.bot.say(f"User not on file: {user.display_name}")
 
-    @commands.command(name="jokeleaderboard", aliases=["jstable", "jslb"], pass_context=False)
+    @commands.command(name="jokeleaderboard", aliases=["jstable", "jslb", "jlb"], pass_context=False)
     async def joke_score_leaderboard(self):
         """ Show the Joke Score Leaderboard """
         embed = discord.Embed(
@@ -259,7 +259,7 @@ class JokeScore:
                 int(self.votes[user.id]["incidents"][incident_id]["timestamp"])
             ).strftime("%d/%m/%y")
 
-            votes = self.votes[user.id]["incidents"][incident_id]["votes"]
+            votes = sum(self.votes[user.id]["incidents"][incident_id]["voters"].values())
             voters = ", ".join(*self.votes[user.id]["incidents"][incident_id]["voters"].items())
             comment = self.votes[user.id]["incidents"][incident_id]["comment"]
 
