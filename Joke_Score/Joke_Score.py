@@ -92,7 +92,7 @@ class JokeScore:
             if react_event:
                 emoji = react_event.reaction.emoji
                 if emoji in self.reactions:
-                    self.votes[user.id]["incidents"][poll.id]["voters"][ctx.message.author.name] = self.reactions[emoji]
+                    self.votes[user.id]["incidents"][poll.id]["voters"][str(ctx.message.author)] = self.reactions[emoji]
 
         await self.bot.say(f'joke\'s over. {self.votes[user.id]["incidents"][poll.id]["votes"]}')
 
