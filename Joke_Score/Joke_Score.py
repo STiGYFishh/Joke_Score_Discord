@@ -80,7 +80,7 @@ class JokeScore:
             "votes": 0
         }
 
-        for reaction in self.reactions:
+        async for reaction in self.reactions:
             await self.bot.add_reaction(poll, reaction)
 
         def check(reaction, check_user):
