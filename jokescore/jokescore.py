@@ -37,6 +37,8 @@ class JokeScore:
 
     def do_setup(self):
         try:
+            if not os.path.isdir(os.path.dirname(self.json_file)):
+                os.mkdir(os.path.dirname(self.json_file))
             if not os.path.isfile(self.json_file):
                 with open(self.json_file, "w") as votes:
                     json.dump({}, votes)
