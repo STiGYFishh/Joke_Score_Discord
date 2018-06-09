@@ -90,7 +90,7 @@ class JokeScore:
             if check_user.id != user.id and not check_user.bot:
                 return str(reaction.emoji) in self.reactions
 
-        while self.votes[user.id]["timestamp"] + self.expiry_time > int(time.time()):
+        while self.votes[user.id]["incidents"][react_message.id]["timestamp"] + self.expiry_time > int(time.time()):
             react_event = await self.bot.wait_for_reaction(message=react_message, check=check)
             if react_event.emoji in self.reactions:
                 self.votes[user.id]["incidents"][react_message.id]["votes"] += self.reactions[react_event.emoji]
