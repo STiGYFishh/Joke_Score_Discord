@@ -2,7 +2,6 @@ import discord
 from discord.ext import commands
 from discord.utils import get
 from datetime import datetime
-import asyncio
 import traceback
 import random
 import time
@@ -24,7 +23,7 @@ class JokeScore:
             "\N{FACE WITH TEARS OF JOY}": 2,
             strongo:                      3,
         }
-        self.expiry_time = 120  # Time in seconds until a vote expires
+        self.expiry_time = 10  # Time in seconds until a vote expires
 
         self.leaderboard_titles = [
             "Most Boisterous Bois",
@@ -72,10 +71,7 @@ class JokeScore:
             return False
 
         user = ctx.message.mentions[0]
-        poll = await self.bot.say(
-            "Vote will expire in "
-            f"{self.expiry_time / 60} minutes!")
-
+        poll = await self.bot.say(f"Vote will expire in {self.expiry_time / 60} minutes!")
         if user.id not in self.votes:
             self.votes[user.id] = {"total": 0, "incidents": {}}
 
@@ -101,6 +97,7 @@ class JokeScore:
         await self.bot.say(f'joke\'s over. {self.votes[user.id]["incidents"][poll.id]["votes"]}')
 
         self.vote_messages.pop(poll.id)
+        self.votes[user.id]["total"] += self.votes[user.id]["incidents"][poll.id]["votes"]
 
         await self.bot.delete_message(poll)
         await self.save_votes()
