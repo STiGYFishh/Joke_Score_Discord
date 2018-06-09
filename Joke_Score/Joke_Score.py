@@ -260,10 +260,12 @@ class JokeScore:
             ).strftime("%d/%m/%y")
 
             votes = sum(self.votes[user.id]["incidents"][incident_id]["voters"].values())
-            voters = ", ".join(*self.votes[user.id]["incidents"][incident_id]["voters"].items())
+            voters_fmt = ""
+            for voter, score in self.votes[user.id]["incidents"][incident_id]["voters"].items():
+                voters_fmt += f"{voter}: {score:+d}\n"
             comment = self.votes[user.id]["incidents"][incident_id]["comment"]
 
-            report_text = f"Date: {date}\nVoters: {voters}\nVotes total: {votes}\nComment: {comment}\n"
+            report_text = f"Date: {date}\nVoters:\n{voters_fmt}\nVotes total: {votes}\nComment: {comment}\n"
 
             embed.add_field(name=incident_id, value=report_text, inline=False)
             fields += 1
