@@ -258,7 +258,7 @@ class JokeScore:
 
             date = datetime.fromtimestamp(
                 int(self.votes[user.id]["incidents"][incident_id]["timestamp"])
-            ).strftime("%d/%m/%y")
+            ).strftime("%c")
 
             votes = sum(self.votes[user.id]["incidents"][incident_id]["voters"].values())
             voters_fmt = ""
