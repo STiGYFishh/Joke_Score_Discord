@@ -94,12 +94,11 @@ class JokeScore:
                 if emoji in self.reactions:
                     self.votes[user.id]["incidents"][poll.id]["voters"][str(ctx.message.author)] = self.reactions[emoji]
 
-        await self.bot.say(f'joke\'s over. {self.votes[user.id]["incidents"][poll.id]["votes"]}')
-
         for vote_value in self.votes[user.id]["incidents"][poll.id]["voters"].values():
-            await self.bot.say(vote_value)
-            await self.bot.say(self.votes[user.id]["incidents"][poll.id])
             self.votes[user.id]["incidents"][poll.id]["votes"] += vote_value
+
+        voters_fmt = ", ".join(*self.votes[user.id]["incidents"][poll.id]["voters"].items())
+        await self.bot.say(f'joke\'s over. {voters_fmt}')
 
         self.votes[user.id]["total"] += self.votes[user.id]["incidents"][poll.id]["votes"]
 
