@@ -14,7 +14,14 @@ class JokeScore:
         self.bot = bot
         self.votes = {}  # trip nested dictionary boiiiiii
         self.vote_messages = {}  # nested dict boiiii
-        self.reactions = ["\N{UP-POINTING SMALL RED TRIANGLE}", "\N{DOWN-POINTING SMALL RED TRIANGLE}"]
+        self.reactions = {
+            "\N{POUTING FACE}":             -3,
+            "\N{ANGRY FACE}":               -2,
+            "\N{UNAMUSED FACE}":            -1,
+            "\N{SMIRKING FACE}":             1,
+            "\N{FACE WITH TEARS OF JOY}":    2,
+            "<:strongo:445586743664836608>": 3,
+        }
         self.expiry_time = 120  # Time in seconds until a vote expires
 
         self.leaderboard_titles = [
@@ -63,40 +70,32 @@ class JokeScore:
             return False
 
         user = ctx.message.mentions[0]
-        react_message = ctx.message
-
-        if user.id not in self.votes.keys():
-            self.votes[user.id] = {"total": 1, "incidents": {}}
-        else:
-            self.votes[user.id]["total"] += 1
-
-        self.vote_messages[react_message.id] = {
-            "user_id": user.id,
-            "timestamp": int(time.time()),
-            "comment": comment,
-            "votes": 1,
-            "bonus": 1
-        }
-
-        self.votes[user.id]["incidents"][react_message.id] = (
-            self.vote_messages[react_message.id])
-
-        for reaction in self.reactions:
-            await self.bot.add_reaction(react_message, reaction)
-
-        expire_message = await self.bot.say(
+        react_message = await self.bot.say(
             "Vote will expire in "
             f"{self.expiry_time / 60} minutes!")
 
-        await asyncio.sleep(self.expiry_time)
-        await self.bot.edit_message(
-            expire_message,
-            "This Joke Poll has Expired the Message ID was: "
-            f"{react_message.id}")
+        if user.id not in self.votes.keys():
+            self.votes[user.id] = {"total": 0, "incidents": {}}
 
-        self.vote_messages[react_message.id].pop("user_id")
-        self.votes[user.id]["incidents"][react_message.id] = (
-            self.vote_messages[react_message.id])
+        self.votes[user.id]["incidents"][react_message.id] = {
+            "timestamp": int(time.time()),
+            "comment": comment,
+            "votes": 0
+        }
+
+        for reaction, _ in self.reactions:
+            await self.bot.add_reaction(react_message, reaction)
+
+        def check(reaction, check_user):
+            if check_user.id != user.id and not check_user.bot:
+                return str(reaction.emoji) in self.reactions.keys()
+
+        while self.votes[user.id]["timestamp"] + self.expiry_time > int(time.time()):
+            react_event, _ = await self.bot.wait_for_reaction(message=react_message, check=check)
+            if react_event.emoji in self.reactions.keys():
+                self.votes[user.id]["incidents"][react_message.id]["votes"] += self.reactions[react_event.emoji]
+
+        await self.bot.say(f'joke\'s over. {self.votes[user.id]["incidents"][react_message.id]["votes"]}')
 
         self.vote_messages.pop(react_message.id)
 
