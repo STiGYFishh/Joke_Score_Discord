@@ -266,9 +266,9 @@ class JokeScore:
                 voters_fmt += f"{voter}: {score:+d}\n"
             comment = self.votes[user.id]["incidents"][incident_id]["comment"]
 
-            report_text = f"Date: {date}\nVoters:\n{voters_fmt}\nVotes total: {votes}\nComment: {comment}\n"
+            report_text = f"Date: {date}\nVoters:\n{voters_fmt}\nVotes total: {votes}\nincident_id: {incident_id}\n"
 
-            embed.add_field(name=incident_id, value=report_text, inline=False)
+            embed.add_field(name=comment, value=report_text, inline=False)
             fields += 1
 
         await self.bot.say(embed=embed)
