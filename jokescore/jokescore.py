@@ -270,6 +270,7 @@ class JokeScore:
             if fields >= 25:
                 embed = create_report_embed(user)
                 report_embeds.append(embed)
+                fields = 0
 
             date = datetime.fromtimestamp(
                 int(self.votes[user.id]["incidents"][incident_id]["timestamp"])
