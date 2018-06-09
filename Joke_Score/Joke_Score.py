@@ -77,7 +77,6 @@ class JokeScore:
         self.votes[user.id]["incidents"][poll.id] = {
             "timestamp": int(time.time()),
             "comment": comment,
-            "votes": 0,
             "voters": {}
         }
 
@@ -94,19 +93,18 @@ class JokeScore:
                 if emoji in self.reactions:
                     self.votes[user.id]["incidents"][poll.id]["voters"][str(ctx.message.author)] = self.reactions[emoji]
 
-        for vote_value in self.votes[user.id]["incidents"][poll.id]["voters"].values():
-            self.votes[user.id]["incidents"][poll.id]["votes"] += vote_value
-
-        voters_fmt = ", ".join(*self.votes[user.id]["incidents"][poll.id]["voters"].items())
-        await self.bot.say(f'joke\'s over. {voters_fmt}')
-
-        self.votes[user.id]["total"] += self.votes[user.id]["incidents"][poll.id]["votes"]
-
+        voters_fmt = ""
+        for voter, score in self.votes[user.id]["incidents"][poll.id]["voters"].items():
+            voters_fmt += f"{voter}: {score:+d}\n"
+        await self.bot.say(f'joke\'s over.\n{voters_fmt}')
         await self.bot.delete_message(poll)
+
+        self.votes[user.id]["total"] += sum(self.votes[user.id]["incidents"][poll.id]["voters"].values())
+
         await self.save_votes()
 
     @commands.command(name="jscomment", aliases=["jsc"], pass_context=True)
-    async def joke_score_comment(self, ctx, message_id: int, mention: str, comment: str):
+    async def joke_score_comment(self, ctx, message_id: str, mention: str, comment: str):
         """ Edit a comment on a past joke, example: /jscomment 1234 @user 'new comment' """
         if len(ctx.message.mentions) == 0:
             await self.bot.say(
@@ -120,8 +118,8 @@ class JokeScore:
 
         user = ctx.message.mentions[0]
         try:
-            old = self.votes[user.id]["incidents"][str(message_id)]["comment"]
-            self.votes[user.id]["incidents"][str(message_id)]["comment"] = comment
+            old = self.votes[user.id]["incidents"][message_id]["comment"]
+            self.votes[user.id]["incidents"][message_id]["comment"] = comment
             await self.save_votes()
 
             await self.bot.say(
@@ -135,7 +133,7 @@ class JokeScore:
                 f"with message id: {message_id}")
 
     @commands.command(name="jsdelpoll", aliases=["jsdl"], pass_context=True)
-    async def joke_score_delete_poll(self, ctx, mention: str, message_id: int):
+    async def joke_score_delete_poll(self, ctx, mention: str, message_id: str):
         """ Delete a Previous Poll from a Users History """
         if len(ctx.message.mentions) == 0:
             await self.bot.say(
@@ -149,8 +147,8 @@ class JokeScore:
 
         user = ctx.message.mentions[0]
         try:
-            poll_votes = self.votes[user.id]["incidents"][str(message_id)]["votes"]
-            self.votes[user.id]["incidents"].pop(str(message_id))
+            poll_votes = sum(self.votes[user.id]["incidents"][message_id]["voters"].values())
+            self.votes[user.id]["incidents"].pop(message_id)
             self.votes[user.id]["total"] -= poll_votes
 
             await self.save_votes()
