@@ -251,7 +251,6 @@ class JokeScore:
             text=f"Joke Score Incident Report for {user.display_name}")
 
         fields = 0
-        report_text = ""
         for incident_id in sorted_incidents:
             if fields >= 25:
                 break
