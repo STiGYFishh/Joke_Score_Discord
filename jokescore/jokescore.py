@@ -60,6 +60,10 @@ class JokeScore:
                       aliases=["js", "joke"], pass_context=True)
     async def joke_score(self, ctx, mention: str, *, comment):
         """ Score everyone's jokes. """
+        comment = "".join(comment)
+        if len(comment) >= 500:
+            await self.bot.way("Comment length too long: max 500 chars.")
+            return False
         if len(ctx.message.mentions) == 0:
             await self.bot.say(
                 "You forgot to mention anyone "
@@ -77,7 +81,7 @@ class JokeScore:
 
         self.votes[user.id]["incidents"][poll.id] = {
             "timestamp": int(time.time()),
-            "comment": "".join(comment),
+            "comment": comment,
             "voters": {}
         }
 
@@ -105,8 +109,13 @@ class JokeScore:
         await self.save_votes()
 
     @commands.command(name="jscomment", aliases=["jsc"], pass_context=True)
-    async def joke_score_comment(self, ctx, message_id: str, mention: str, comment: str):
+    async def joke_score_comment(self, ctx, message_id: str, mention: str, *, comment):
         """ Edit a comment on a past joke, example: /jscomment 1234 @user 'new comment' """
+        comment = "".join(comment)
+        if len(comment) >= 500:
+            await self.bot.way("Comment length too long: max 500 chars.")
+            return False
+
         if len(ctx.message.mentions) == 0:
             await self.bot.say(
                 "You forgot to mention anyone "
@@ -240,37 +249,47 @@ class JokeScore:
         except (KeyError, TypeError):
             await self.bot.say("This user has no incidents to report")
             return False
+        
+        def create_report_embed(user):
+            embed = discord.Embed(
+                colour=discord.Colour(0xc27c0e),
+                url="https://github.com/STiGYFishh/Joke_Score_Discord/")
 
-        embed = discord.Embed(
-            colour=discord.Colour(0xc27c0e),
-            url="https://github.com/STiGYFishh/Joke_Score_Discord/")
+            embed.set_thumbnail(
+                url="https://cdn.discordapp.com/emojis/296358609661591552.png?v=1")
+            embed.set_footer(
+                text=f"Joke Score Incident Report for {user.display_name}")
+            
+            return embed
 
-        embed.set_thumbnail(
-            url="https://cdn.discordapp.com/emojis/296358609661591552.png?v=1")
-        embed.set_footer(
-            text=f"Joke Score Incident Report for {user.display_name}")
+        embed = create_report_embed(user)
 
         fields = 0
+        report_embeds = [embed]
         for incident_id in sorted_incidents:
             if fields >= 25:
-                break
+                embed = create_report_embed(user)
+                report_embeds.append(embed)
 
             date = datetime.fromtimestamp(
                 int(self.votes[user.id]["incidents"][incident_id]["timestamp"])
             ).strftime("%c")
 
             votes = sum(self.votes[user.id]["incidents"][incident_id]["voters"].values())
+
             voters_fmt = ""
             for voter, score in self.votes[user.id]["incidents"][incident_id]["voters"].items():
                 voters_fmt += f"{voter}: {score:+d}\n"
+
             comment = self.votes[user.id]["incidents"][incident_id]["comment"]
 
-            report_text = f"Date: {date}\nVoters:\n{voters_fmt}\nVotes total: {votes}\nincident_id: {incident_id}\n"
+            report_text = f"Date: {date}\nVoters:\n{voters_fmt}\nVotes total: {votes}\incident_id: {incident_id}\n"
 
             embed.add_field(name=comment, value=report_text, inline=False)
             fields += 1
-
-        await self.bot.say(embed=embed)
+        
+        for embed in report_embeds:
+            await self.bot.say(embed=embed)
 
 
 def setup(bot):
