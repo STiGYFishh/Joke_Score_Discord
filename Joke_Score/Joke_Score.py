@@ -20,7 +20,7 @@ class JokeScore:
             "\N{UNAMUSED FACE}":         -1,
             "\N{SMIRKING FACE}":          1,
             "\N{FACE WITH TEARS OF JOY}": 2,
-            strongo:                      3,
+            str(strongo):                 3,
         }
         self.expiry_time = 10  # Time in seconds until a vote expires
 
