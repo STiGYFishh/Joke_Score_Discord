@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord.utils import get
 from datetime import datetime
 import asyncio
 import traceback
@@ -14,13 +15,14 @@ class JokeScore:
         self.bot = bot
         self.votes = {}  # trip nested dictionary boiiiiii
         self.vote_messages = {}  # nested dict boiiii
+        strongo = get(bot.get_all_emojis(), name='strongo')
         self.reactions = {
             "\N{POUTING FACE}":             -3,
             "\N{ANGRY FACE}":               -2,
             "\N{UNAMUSED FACE}":            -1,
             "\N{SMIRKING FACE}":             1,
             "\N{FACE WITH TEARS OF JOY}":    2,
-            "<:strongo:445586743664836608>": 3,
+            strongo: 3,
         }
         self.expiry_time = 120  # Time in seconds until a vote expires
 
