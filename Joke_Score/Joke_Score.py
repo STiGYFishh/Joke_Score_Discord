@@ -17,12 +17,12 @@ class JokeScore:
         self.vote_messages = {}  # nested dict boiiii
         strongo = get(bot.get_all_emojis(), name='strongo')
         self.reactions = {
-            "\N{POUTING FACE}":             -3,
-            "\N{ANGRY FACE}":               -2,
-            "\N{UNAMUSED FACE}":            -1,
-            "\N{SMIRKING FACE}":             1,
-            "\N{FACE WITH TEARS OF JOY}":    2,
-            strongo: 3,
+            "\N{POUTING FACE}":          -3,
+            "\N{ANGRY FACE}":            -2,
+            "\N{UNAMUSED FACE}":         -1,
+            "\N{SMIRKING FACE}":          1,
+            "\N{FACE WITH TEARS OF JOY}": 2,
+            strongo:                      3,
         }
         self.expiry_time = 120  # Time in seconds until a vote expires
 
@@ -72,72 +72,37 @@ class JokeScore:
             return False
 
         user = ctx.message.mentions[0]
-        react_message = await self.bot.say(
+        poll = await self.bot.say(
             "Vote will expire in "
             f"{self.expiry_time / 60} minutes!")
 
         if user.id not in self.votes:
             self.votes[user.id] = {"total": 0, "incidents": {}}
 
-        self.votes[user.id]["incidents"][react_message.id] = {
+        self.votes[user.id]["incidents"][poll.id] = {
             "timestamp": int(time.time()),
             "comment": comment,
             "votes": 0
         }
 
         for reaction in self.reactions:
-            await self.bot.add_reaction(react_message, reaction)
+            await self.bot.add_reaction(poll, reaction)
 
         def check(reaction, check_user):
             if check_user.id != user.id and not check_user.bot:
                 return str(reaction.emoji) in self.reactions
 
-        while self.votes[user.id]["incidents"][react_message.id]["timestamp"] + self.expiry_time > int(time.time()):
-            react_event = await self.bot.wait_for_reaction(message=react_message, check=check)
+        while self.votes[user.id]["incidents"][poll.id]["timestamp"] + self.expiry_time > int(time.time()):
+            react_event = await self.bot.wait_for_reaction(message=poll, check=check)
             if react_event.emoji in self.reactions:
-                self.votes[user.id]["incidents"][react_message.id]["votes"] += self.reactions[react_event.emoji]
+                self.votes[user.id]["incidents"][poll.id]["votes"] += self.reactions[react_event.emoji]
 
-        await self.bot.say(f'joke\'s over. {self.votes[user.id]["incidents"][react_message.id]["votes"]}')
+        await self.bot.say(f'joke\'s over. {self.votes[user.id]["incidents"][poll.id]["votes"]}')
 
-        self.vote_messages.pop(react_message.id)
+        self.vote_messages.pop(poll.id)
 
-        await self.bot.delete_message(react_message)
+        await self.bot.delete_message(poll)
         await self.save_votes()
-
-    async def on_reaction_add(self, reaction, user):
-        # Check the message is a vote poll created by the bot.
-        if reaction.message.id in self.vote_messages.keys():
-            # Make sure bots can't vote
-            # and the initial bot reactions aren't counted
-            if not user.bot and user.id != self.bot.user.id:
-                user_id = self.vote_messages[reaction.message.id]["user_id"]
-
-                if reaction.emoji == "\N{UP-POINTING SMALL RED TRIANGLE}":
-                    self.votes[user_id]["total"] += 1
-                    self.votes[user_id]["incidents"][reaction.message.id]["votes"] += 1
-                elif reaction.emoji == "\N{DOWN-POINTING SMALL RED TRIANGLE}":
-                    self.votes[user_id]["total"] -= 1
-                    self.votes[user_id]["incidents"][reaction.message.id]["votes"] -= 1
-                else:
-                    await self.bot.remove_reaction(
-                        reaction.message,
-                        reaction.emoji,
-                        user)
-
-    async def on_reaction_remove(self, reaction, user):
-        # Check the message is a vote poll created by the bot.
-        if reaction.message.id in self.vote_messages.keys():
-            # Make sure bots can't vote
-            # and the initial bot reactions aren't counted
-            if not user.bot and user.id != self.bot.user.id:
-                user_id = self.vote_messages[reaction.message.id]["user_id"]
-
-                if reaction.emoji == "\N{UP-POINTING SMALL RED TRIANGLE}":
-                    self.votes[user_id]["total"] -= 1
-                    self.votes[user_id]["incidents"][reaction.message.id]["votes"] -= 1
-                elif reaction.emoji == "\N{DOWN-POINTING SMALL RED TRIANGLE}":
-                    self.votes[user_id]["total"] += 1
-                    self.votes[user_id]["incidents"][reaction.message.id]["votes"] += 1
 
     @commands.command(name="jscomment", aliases=["jsc"], pass_context=True)
     async def joke_score_comment(self, ctx, message_id: int, mention: str, comment: str):
