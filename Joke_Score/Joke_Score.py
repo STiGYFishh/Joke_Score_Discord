@@ -96,7 +96,6 @@ class JokeScore:
 
         await self.bot.say(f'joke\'s over. {self.votes[user.id]["incidents"][poll.id]["votes"]}')
 
-        self.vote_messages.pop(poll.id)
         self.votes[user.id]["total"] += self.votes[user.id]["incidents"][poll.id]["votes"]
 
         await self.bot.delete_message(poll)
