@@ -96,6 +96,8 @@ class JokeScore:
         await self.bot.say(f'joke\'s over. {self.votes[user.id]["incidents"][poll.id]["votes"]}')
 
         for vote_value in self.votes[user.id]["incidents"][poll.id].values():
+            await self.bot.say(vote_value)
+            await self.bot.say(self.votes[user.id]["incidents"][poll.id])
             self.votes[user.id]["incidents"][poll.id]["votes"] += vote_value
 
         self.votes[user.id]["total"] += self.votes[user.id]["incidents"][poll.id]["votes"]
