@@ -38,22 +38,20 @@ class JokeScore:
     def do_setup(self):
         try:
             if not os.path.isfile(self.json_file):
-                with open(self.json_file, "w") as file:
-                    json.dump({}, file)
+                with open(self.json_file, "w") as votes:
+                    json.dump({}, votes)
             else:
-                with open(self.json_file, "r") as file:
-                    votes = json.load(file)
-                    self.votes = votes
+                with open(self.json_file, "r") as votes:
+                    self.votes = json.load(votes)
         except OSError:
             traceback.print_exc()
 
     async def save_votes(self):
         try:
-            with open(self.json_file, "w") as file:
-                json.dump(self.votes, file)
+            with open(self.json_file, "w") as votes:
+                json.dump(self.votes, votes)
         except OSError:
-            await self.bot.say(
-                "An Error occured whilst writing the vote tally.")
+            await self.bot.say("An Error occured whilst writing the vote tally.")
             traceback.print_exc()
 
     @commands.command(name="jokescore",
