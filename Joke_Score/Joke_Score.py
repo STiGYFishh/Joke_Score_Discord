@@ -35,7 +35,7 @@ class JokeScore:
 
         self.do_setup()
 
-    def do_setup(self, json_file):
+    def do_setup(self):
         try:
             if not os.path.isfile(self.json_file):
                 with open(self.json_file, "w") as file:
