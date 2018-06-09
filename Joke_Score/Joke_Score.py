@@ -89,7 +89,7 @@ class JokeScore:
         while self.votes[user.id]["incidents"][poll.id]["timestamp"] + self.expiry_time > int(time.time()):
             react_event = await self.bot.wait_for_reaction(message=poll, check=check, emoji=self.reactions, timeout=5)
             if react_event:
-                emoji = react_event.react.emoji
+                emoji = react_event.reaction.emoji
                 if emoji in self.reactions:
                     await self.bot.say(emoji)
                     await self.bot.say(self.reactions[emoji])
