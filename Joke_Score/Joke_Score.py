@@ -77,7 +77,8 @@ class JokeScore:
         self.votes[user.id]["incidents"][poll.id] = {
             "timestamp": int(time.time()),
             "comment": comment,
-            "votes": 0
+            "votes": 0,
+            "voters": {}
         }
 
         for reaction in self.reactions:
@@ -91,11 +92,11 @@ class JokeScore:
             if react_event:
                 emoji = react_event.reaction.emoji
                 if emoji in self.reactions:
-                    self.votes[user.id]["incidents"][poll.id][ctx.message.author] = self.reactions[emoji]
+                    self.votes[user.id]["incidents"][poll.id]["voters"][ctx.message.author.name] = self.reactions[emoji]
 
         await self.bot.say(f'joke\'s over. {self.votes[user.id]["incidents"][poll.id]["votes"]}')
 
-        for vote_value in self.votes[user.id]["incidents"][poll.id].values():
+        for vote_value in self.votes[user.id]["incidents"][poll.id]["voters"].values():
             await self.bot.say(vote_value)
             await self.bot.say(self.votes[user.id]["incidents"][poll.id])
             self.votes[user.id]["incidents"][poll.id]["votes"] += vote_value
@@ -262,9 +263,10 @@ class JokeScore:
             ).strftime("%d/%m/%y")
 
             votes = self.votes[user.id]["incidents"][incident_id]["votes"]
+            voters = ", ".join(*self.votes[user.id]["incidents"][incident_id]["voters"].items())
             comment = self.votes[user.id]["incidents"][incident_id]["comment"]
 
-            report_text = f"Date: {date}\nVotes: {votes}\nComment: {comment}\n"
+            report_text = f"Date: {date}\nVoters: {voters}\nVotes total: {votes}\nComment: {comment}\n"
 
             embed.add_field(name=incident_id, value=report_text, inline=False)
             fields += 1
