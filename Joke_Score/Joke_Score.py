@@ -91,15 +91,12 @@ class JokeScore:
             if react_event:
                 emoji = react_event.reaction.emoji
                 if emoji in self.reactions:
-                    await self.bot.say(emoji)
-                    await self.bot.say(self.reactions[emoji])
-                    self.votes[user.id]["incidents"][poll.id]["votes"] += self.reactions[emoji]
-                else:
-                    await self.bot.say("not in self.reactions")
-            else:
-                await self.bot.say("no")
+                    self.votes[user.id]["incidents"][poll.id][ctx.message.author] = self.reactions[emoji]
 
         await self.bot.say(f'joke\'s over. {self.votes[user.id]["incidents"][poll.id]["votes"]}')
+
+        for vote_value in self.votes[user.id]["incidents"][poll.id].values():
+            self.votes[user.id]["incidents"][poll.id]["votes"] += vote_value
 
         self.votes[user.id]["total"] += self.votes[user.id]["incidents"][poll.id]["votes"]
 
