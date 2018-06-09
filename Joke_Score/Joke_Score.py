@@ -23,6 +23,7 @@ class JokeScore:
             strongo:                      3,
         }
         self.expiry_time = 10  # Time in seconds until a vote expires
+        self.json_file = "data/jokescore/jokes.json"
 
         self.leaderboard_titles = [
             "Most Boisterous Bois",
@@ -34,13 +35,13 @@ class JokeScore:
 
         self.do_setup()
 
-    def do_setup(self):
+    def do_setup(self, json_file):
         try:
-            if not os.path.isfile("joke_score.json"):
-                with open("joke_score.json", "w") as file:
+            if not os.path.isfile(self.json_file):
+                with open(self.json_file, "w") as file:
                     json.dump({}, file)
             else:
-                with open("joke_score.json", "r") as file:
+                with open(self.json_file, "r") as file:
                     votes = json.load(file)
                     self.votes = votes
         except OSError:
@@ -48,7 +49,7 @@ class JokeScore:
 
     async def save_votes(self):
         try:
-            with open("joke_score.json", "w") as file:
+            with open(self.json_file, "w") as file:
                 json.dump(self.votes, file)
         except OSError:
             await self.bot.say(
