@@ -86,8 +86,6 @@ class JokeScore:
         def check(reaction, check_user):
             if check_user.id != user.id and not check_user.bot:
                 return str(reaction.emoji) in self.reactions
-            else:
-                await self.bot.say("nocheck")
 
         while self.votes[user.id]["incidents"][poll.id]["timestamp"] + self.expiry_time > int(time.time()):
             react_event = await self.bot.wait_for_reaction(message=poll, check=check, timeout=5)
