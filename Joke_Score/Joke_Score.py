@@ -20,7 +20,7 @@ class JokeScore:
             "\N{UNAMUSED FACE}":         -1,
             "\N{SMIRKING FACE}":          1,
             "\N{FACE WITH TEARS OF JOY}": 2,
-            str(strongo):                 3,
+            strongo:                      3,
         }
         self.expiry_time = 10  # Time in seconds until a vote expires
 
@@ -86,9 +86,8 @@ class JokeScore:
         def check(reaction, check_user):
             return check_user.id != user.id and not check_user.bot
 
-        valid_emoji = "".join(self.reactions)
         while self.votes[user.id]["incidents"][poll.id]["timestamp"] + self.expiry_time > int(time.time()):
-            react_event = await self.bot.wait_for_reaction(message=poll, check=check, emoji=valid_emoji, timeout=5)
+            react_event = await self.bot.wait_for_reaction(message=poll, check=check, emoji=self.reactions, timeout=5)
             if react_event:
                 if react_event.emoji in self.reactions:
                     await self.bot.say(react_event.emoji)
