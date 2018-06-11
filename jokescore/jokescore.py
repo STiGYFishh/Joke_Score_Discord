@@ -249,7 +249,7 @@ class JokeScore:
         except (KeyError, TypeError):
             await self.bot.say("This user has no incidents to report")
             return False
-        
+
         def create_report_embed(user):
             embed = discord.Embed(
                 colour=discord.Colour(0xc27c0e),
@@ -259,7 +259,7 @@ class JokeScore:
                 url="https://cdn.discordapp.com/emojis/296358609661591552.png?v=1")
             embed.set_footer(
                 text=f"Joke Score Incident Report for {user.display_name}")
-            
+
             return embed
 
         embed = create_report_embed(user)
@@ -284,11 +284,11 @@ class JokeScore:
 
             comment = self.votes[user.id]["incidents"][incident_id]["comment"]
 
-            report_text = f"Date: {date}\nVoters:\n{voters_fmt}\nVotes total: {votes}\incident_id: {incident_id}\n"
+            report_text = f"Date: {date}\nVoters:\n{voters_fmt}\nVotes total: {votes}\nincident_id: {incident_id}\n"
 
             embed.add_field(name=comment, value=report_text, inline=False)
             fields += 1
-        
+
         for embed in report_embeds:
             await self.bot.say(embed=embed)
 
