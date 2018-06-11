@@ -99,9 +99,11 @@ class JokeScore:
                     self.votes[user.id]["incidents"][poll.id]["voters"][str(react_event.user)] = self.reactions[emoji]
 
         voters_fmt = ""
+        total_score = 0
         for voter, score in self.votes[user.id]["incidents"][poll.id]["voters"].items():
             voters_fmt += f"{voter}: {score:+d}\n"
-        await self.bot.say(f'joke\'s over.\n{voters_fmt}')
+            total_score += score
+        await self.bot.say(f'joke\'s over.\n{voters_fmt}\ntotal: {total_score}')
         await self.bot.delete_message(poll)
 
         self.votes[user.id]["total"] += sum(self.votes[user.id]["incidents"][poll.id]["voters"].values())
