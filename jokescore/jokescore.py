@@ -75,7 +75,7 @@ class JokeScore:
             return False
 
         user = ctx.message.mentions[0]
-        poll = await self.bot.say(f"Vote will expire in {self.expiry_time / 60} minutes!")
+        poll = await self.bot.say(f"Vote with reactions: -3/-2/-1/+1/+2/+3.\nVote will expire in {self.expiry_time / 60} minutes!")
         if user.id not in self.votes:
             self.votes[user.id] = {"total": 0, "incidents": {}}
 
