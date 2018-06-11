@@ -22,7 +22,7 @@ class JokeScore:
             "\N{FACE WITH TEARS OF JOY}": 2,
             strongo:                      3,
         }
-        self.expiry_time = 10  # Time in seconds until a vote expires
+        self.expiry_time = 120  # Time in seconds until a vote expires
         self.json_file = "data/jokescore/jokes.json"
 
         self.leaderboard_titles = [
