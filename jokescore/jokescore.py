@@ -257,8 +257,7 @@ class JokeScore:
                 colour=discord.Colour(0xc27c0e),
                 url="https://github.com/STiGYFishh/Joke_Score_Discord/")
 
-            embed.set_thumbnail(
-                url="https://cdn.discordapp.com/emojis/296358609661591552.png?v=1")
+            embed.set_thumbnail(url=user.avatar_url)
             embed.set_footer(
                 text=f"Joke Score Incident Report for {user.display_name}")
 
