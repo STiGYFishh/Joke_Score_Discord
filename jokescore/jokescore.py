@@ -204,8 +204,13 @@ class JokeScore:
         embed.set_footer(text="Joke Score Leaderboard")
 
         leaderboard_text = ""
+        
+        sorted_score = sorted(
+            self.votes.keys(),
+            key=lambda x: self.votes[x]['total'],
+            reverse=True)
 
-        for user_id in self.votes.keys():
+        for user_id in sorted_score:
             user = await self.bot.get_user_info(user_id)
             leaderboard_text += f"{user.display_name}: {self.votes[user_id]['total']}\n"
 
