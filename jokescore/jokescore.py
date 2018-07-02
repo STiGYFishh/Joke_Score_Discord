@@ -15,6 +15,7 @@ class JokeScore:
         self.votes = {}  # trip nested dictionary boiiiiii
         self.expiry_time = 120  # Time in seconds until a vote expires
         self.json_file = "data/jokescore/jokes.json"
+        self.reactions = {}
 
         self.leaderboard_titles = [
             "Most Boisterous Bois",
