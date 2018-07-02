@@ -15,7 +15,6 @@ class JokeScore:
         self.votes = {}  # trip nested dictionary boiiiiii
         self.expiry_time = 120  # Time in seconds until a vote expires
         self.json_file = "data/jokescore/jokes.json"
-        self.reactions = {}
 
         self.leaderboard_titles = [
             "Most Boisterous Bois",
@@ -27,16 +26,7 @@ class JokeScore:
 
         self.do_setup()
 
-    async def do_setup(self):
-        strongo = get(await self.bot.get_all_emojis(), name='strongo')
-        self.reactions = {
-            "\N{POUTING FACE}":          -3,
-            "\N{ANGRY FACE}":            -2,
-            "\N{UNAMUSED FACE}":         -1,
-            "\N{SMIRKING FACE}":          1,
-            "\N{FACE WITH TEARS OF JOY}": 2,
-            strongo:                      3,
-        }
+    def do_setup(self):
         try:
             if not os.path.isdir(os.path.dirname(self.json_file)):
                 os.mkdir(os.path.dirname(self.json_file))
@@ -61,6 +51,15 @@ class JokeScore:
                       aliases=["js", "joke"], pass_context=True)
     async def joke_score(self, ctx, mention: str, *, comment):
         """ Score everyone's jokes. """
+        strongo = get(await self.bot.get_all_emojis(), name='strongo')
+        reactions = {
+            "\N{POUTING FACE}":          -3,
+            "\N{ANGRY FACE}":            -2,
+            "\N{UNAMUSED FACE}":         -1,
+            "\N{SMIRKING FACE}":          1,
+            "\N{FACE WITH TEARS OF JOY}": 2,
+            strongo:                      3,
+        }
         comment = "".join(comment)
         if len(comment) >= 500:
             await self.bot.way("Comment length too long: max 500 chars.")
@@ -86,18 +85,18 @@ class JokeScore:
             "voters": {}
         }
 
-        for reaction in self.reactions:
+        for reaction in reactions:
             await self.bot.add_reaction(poll, reaction)
 
         def check(reaction, check_user):
             return check_user.id != user.id and not check_user.bot
 
         while self.votes[user.id]["incidents"][poll.id]["timestamp"] + self.expiry_time > int(time.time()):
-            react_event = await self.bot.wait_for_reaction(message=poll, check=check, emoji=self.reactions, timeout=5)
+            react_event = await self.bot.wait_for_reaction(message=poll, check=check, emoji=reactions, timeout=5)
             if react_event:
                 emoji = react_event.reaction.emoji
-                if emoji in self.reactions:
-                    self.votes[user.id]["incidents"][poll.id]["voters"][str(react_event.user)] = self.reactions[emoji]
+                if emoji in reactions:
+                    self.votes[user.id]["incidents"][poll.id]["voters"][str(react_event.user)] = reactions[emoji]
 
         voters_fmt = ""
         total_score = 0
