@@ -13,15 +13,6 @@ class JokeScore:
     def __init__(self, bot):
         self.bot = bot
         self.votes = {}  # trip nested dictionary boiiiiii
-        strongo = get(bot.get_all_emojis(), name='strongo')
-        self.reactions = {
-            "\N{POUTING FACE}":          -3,
-            "\N{ANGRY FACE}":            -2,
-            "\N{UNAMUSED FACE}":         -1,
-            "\N{SMIRKING FACE}":          1,
-            "\N{FACE WITH TEARS OF JOY}": 2,
-            strongo:                      3,
-        }
         self.expiry_time = 120  # Time in seconds until a vote expires
         self.json_file = "data/jokescore/jokes.json"
 
@@ -35,7 +26,16 @@ class JokeScore:
 
         self.do_setup()
 
-    def do_setup(self):
+    async def do_setup(self):
+        strongo = get(await self.bot.get_all_emojis(), name='strongo')
+        self.reactions = {
+            "\N{POUTING FACE}":          -3,
+            "\N{ANGRY FACE}":            -2,
+            "\N{UNAMUSED FACE}":         -1,
+            "\N{SMIRKING FACE}":          1,
+            "\N{FACE WITH TEARS OF JOY}": 2,
+            strongo:                      3,
+        }
         try:
             if not os.path.isdir(os.path.dirname(self.json_file)):
                 os.mkdir(os.path.dirname(self.json_file))
