@@ -205,7 +205,7 @@ class JokeScore:
         embed.set_footer(text="Joke Score Leaderboard")
 
         leaderboard_text = ""
-        
+
         sorted_score = sorted(
             self.votes.keys(),
             key=lambda x: self.votes[x]['total'],
