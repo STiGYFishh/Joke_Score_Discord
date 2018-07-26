@@ -41,15 +41,15 @@ class JokeScore:
             traceback.print_exc()
 
     async def save_votes(self):
-    	self.today = datetime.now().strftime('%d-%m-%Y')
-    	filename = "".join(self.json_file.split("/")[-1:])
-    	daily_file = f"{''.join([f'/{x}' for x in [x for x in self.json_file.split('/')[0:-1] if x is not '']])}/{self.today}_{filename}"
+        self.today = datetime.now().strftime('%d-%m-%Y')
+        filename = "".join(self.json_file.split("/")[-1:])
+        daily_file = f"{''.join([f'/{x}' for x in [x for x in self.json_file.split('/')[0:-1] if x is not '']])}/{self.today}_{filename}"
         try:
             with open(self.json_file, "w") as votes:
                 json.dump(self.votes, votes)
             if not os.isfile(daily_file):
-	            with open(daily_file, "w") as votes:
-	            	json.dump(self.votes, votes)
+                with open(daily_file, "w") as votes:
+                    json.dump(self.votes, votes)
         except OSError:
             await self.bot.say("An Error occured whilst writing the vote tally.")
             traceback.print_exc()
