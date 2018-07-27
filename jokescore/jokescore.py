@@ -39,7 +39,6 @@ class JokeScore:
                     self.votes = json.load(votes)
         except OSError as e:
             await self.bot.say(f"An Error Occured During Startup. A {type(e).__name__} was raised:")
-            traceback.print_exc()
 
     async def save_votes(self):
         self.today = datetime.now().strftime('%d-%m-%Y')
@@ -57,7 +56,6 @@ class JokeScore:
                     json.dump(self.votes, votes)
         except OSError:
             await self.bot.say(f"An Error Whilst Writing the Vote Tally. A {type(e).__name__} was raised:")
-            traceback.print_exc()
 
     @commands.command(name="jokescore",
                       aliases=["js", "joke"], pass_context=True)
@@ -333,7 +331,6 @@ class JokeScore:
                 content="Copy of Jokescore JSON file.")
         except (OSError, discord.HTTPException):
             await self.bot.say(f"An Error Ocurred Whilst Sending the Backup File. A {type(e).__name__} was raised:")
-            traceback.print_exc()
 
 
 def setup(bot):
