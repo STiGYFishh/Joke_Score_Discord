@@ -27,6 +27,15 @@ class JokeScore:
 
         self.do_setup()
 
+    @staticmethod
+    def get_traceback(exception, limit=None, chain=True):
+        return ''.join(traceback.format_exception(
+            type(exception), 
+            exception, 
+            exception.__traceback__, 
+            limit=limit,
+            chain=chain))
+
     def do_setup(self):
         try:
             if not os.path.isdir(os.path.dirname(self.json_file)):
@@ -37,9 +46,10 @@ class JokeScore:
             else:
                 with open(self.json_file, "r") as votes:
                     self.votes = json.load(votes)
-        except OSError:
+        except OSError as e:
             traceback.print_exc()
-            await self.bot.say(f"An Error Occured During Startup:\n```{traceback.print_exc()}```")
+            await self.bot.say("An Error Occured During Startup."
+                f"A {type(e).__name__} was raised:\n```{self.get_traceback(e)}```")
 
     async def save_votes(self):
         self.today = datetime.now().strftime('%d-%m-%Y')
@@ -47,7 +57,7 @@ class JokeScore:
         #  One of yous did it. Disgaaaaassting.
         dir_parts = [x for x in self.json_file.split('/')[0:-1] if x is not '']
         dir_path = ''.join([f'/{x}' for x in dir_parts ])
-        
+
         daily_file = f"{dir_path}/{self.today}_{filename}"
         try:
             with open(self.json_file, "w") as votes:
@@ -56,8 +66,8 @@ class JokeScore:
                 with open(daily_file, "w") as votes:
                     json.dump(self.votes, votes)
         except OSError:
-            await self.bot.say("An Error occured whilst writing the vote tally:\n"
-                f"```{traceback.print_exc()}```")
+            await self.bot.say("An Error occured whilst writing the vote tally."
+                f"A {type(e).__name__} was raised:\n```{self.get_traceback(e)}```")
             traceback.print_exc()
 
     @commands.command(name="jokescore",
@@ -333,8 +343,8 @@ class JokeScore:
                 filename="jokescore_backup.json", 
                 content="Copy of Jokescore JSON file.")
         except (OSError, discord.HTTPException):
-            await self.bot.say("An Error Ocurred Whilst Sending the Backup File")
-            await self.bot.say(f"```{traceback.print_exc()}```")
+            await self.bot.say("An Error Ocurred Whilst Sending the Backup File"
+                f"A {type(e).__name__} was raised:\n```{self.get_traceback(e)}```")
             traceback.print_exc()
 
 
