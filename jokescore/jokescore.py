@@ -48,8 +48,7 @@ class JokeScore:
                     self.votes = json.load(votes)
         except OSError as e:
             traceback.print_exc()
-            await self.bot.say("An Error Occured During Startup."
-                f"A {type(e).__name__} was raised:\n```{self.get_traceback(e)}```")
+            await self.bot.say(f"An Error Occured During Startup. A {type(e).__name__} was raised:\n```{self.get_traceback(e)}```")
 
     async def save_votes(self):
         self.today = datetime.now().strftime('%d-%m-%Y')
