@@ -39,10 +39,13 @@ class JokeScore:
                     self.votes = json.load(votes)
         except OSError:
             traceback.print_exc()
+            await self.bot.say("An Error Occured During Startup:\n"
+                f"```{traceback.print_exc()}```")
 
     async def save_votes(self):
         self.today = datetime.now().strftime('%d-%m-%Y')
         filename = "".join(self.json_file.split("/")[-1:])
+        #  One of yous did it. Disgaaaaassting.
         daily_file = f"{''.join([f'/{x}' for x in [x for x in self.json_file.split('/')[0:-1] if x is not '']])}/{self.today}_{filename}"
         try:
             with open(self.json_file, "w") as votes:
@@ -51,7 +54,8 @@ class JokeScore:
                 with open(daily_file, "w") as votes:
                     json.dump(self.votes, votes)
         except OSError:
-            await self.bot.say("An Error occured whilst writing the vote tally.")
+            await self.bot.say("An Error occured whilst writing the vote tally:\n"
+                f"```{traceback.print_exc()}```")
             traceback.print_exc()
 
     @commands.command(name="jokescore",
@@ -82,7 +86,9 @@ class JokeScore:
             return False
 
         user = ctx.message.mentions[0]
-        poll = await self.bot.say(f"Vote with reactions: -3/-2/-1/+1/+2/+3.\nVote will expire in {self.expiry_time / 60} minutes!")
+        poll = await self.bot.say("Vote with reactions: -3/-2/-1/+1/+2/+3.\n"
+            f"Vote will expire in {self.expiry_time / 60} minutes!")
+
         if user.id not in self.votes:
             self.votes[user.id] = {"total": 0, "incidents": {}}
 
@@ -113,9 +119,10 @@ class JokeScore:
         voters_fmt = ""
         total_score = 0
         for voter, score in self.votes[user.id]["incidents"][poll.id]["voters"].items():
-            voters_fmt += f"{voter}: {score:+d}\n"
+            voters_fmt += f"*{voter}*: **{score:+d}**\n"
             total_score += score
-        await self.bot.say(f'Joke Finished: "{comment}"\n\n{voters_fmt}\ntotal: {total_score:+d}')
+        await self.bot.say(f'Joke Finished: "{comment}"\n\n{voters_fmt}\n'
+            f'*total*: **{total_score:+d}**{"-"*32}')
         await self.bot.delete_message(poll)
 
         self.votes[user.id]["total"] += sum(self.votes[user.id]["incidents"][poll.id]["voters"].values())
@@ -127,7 +134,7 @@ class JokeScore:
         """ Edit a comment on a past joke, example: /jscomment 1234 @user 'new comment' """
         comment = "".join(comment)
         if len(comment) >= 500:
-            await self.bot.way("Comment length too long: max 500 chars.")
+            await self.bot.say("Comment length too long: max 500 chars.")
             return False
 
         if len(ctx.message.mentions) == 0:
@@ -180,7 +187,7 @@ class JokeScore:
 
         except KeyError:
             await self.bot.say(
-                f"Poll not found for user: {user.display_name}"
+                f"Poll not found for user: {user.display_name} "
                 f"with message id: {message_id}")
 
     @commands.command(name="jsdeluser", aliases=["jsdu"], pass_context=True)
@@ -302,13 +309,31 @@ class JokeScore:
 
             comment = self.votes[user.id]["incidents"][incident_id]["comment"]
 
-            report_text = f"Date: {date}\nVoters:\n{voters_fmt}\nVotes total: {votes}\nincident_id: {incident_id}\n"
+            report_text = (f"Date: {date}\nVoters:\n{voters_fmt}\n"
+                f"Votes total: {votes}\nincident_id: {incident_id}\n")
 
             embed.add_field(name=comment, value=report_text, inline=False)
             fields += 1
 
         for embed in report_embeds:
             await self.bot.say(embed=embed)
+
+    @commands.command(name="jokescorelocalbackup", aliases=["jsbak"], pass_context=True)
+    async def jokescore_local_backup(self, ctx):
+        try:
+            await self.save_votes()
+        except OSError:
+            return
+
+        try:
+            self.bot.send_file(ctx.message.channel, 
+                self.json_file, 
+                filename="jokescore_backup.json", 
+                content="Copy of Jokescore JSON file.")
+        except (OSError, discord.HTTPException):
+            await self.bot.say("An Error Ocurred Whilst Sending the Backup File")
+            await self.bot.say(f"```{traceback.print_exc()}```")
+            traceback.print_exc()
 
 
 def setup(bot):
