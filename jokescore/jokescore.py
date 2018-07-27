@@ -14,7 +14,7 @@ class JokeScore:
         self.bot = bot
         self.votes = {}  # trip nested dictionary boiiiiii
         self.expiry_time = 120  # Time in seconds until a vote expires
-        self.json_file = "/data/jokescore/jokes.json"
+        self.json_file = "data/jokescore/jokes.json"
         self.today = datetime.now().strftime('%d-%m-%Y')
 
         self.leaderboard_titles = [
@@ -45,9 +45,9 @@ class JokeScore:
         filename = "".join(self.json_file.split("/")[-1:])
         #  One of yous did it. Disgaaaaassting.
         dir_parts = [x for x in self.json_file.split('/')[0:-1] if x is not '']
-        dir_path = ''.join([f'/{x}' for x in dir_parts])
+        dir_path = ''.join([f'{x}/' for x in dir_parts])
 
-        daily_file = f"{dir_path}/{self.today}_{filename}"
+        daily_file = f"{dir_path}{self.today}_{filename}"
         try:
             with open(self.json_file, "w") as votes:
                 json.dump(self.votes, votes)
