@@ -304,12 +304,12 @@ class JokeScore:
 
             voters_fmt = ""
             for voter, score in self.votes[user.id]["incidents"][incident_id]["voters"].items():
-                voters_fmt += f"{voter}: {score:+d}\n"
+                voters_fmt += f"*{voter}*: **{score:+d}**\n"
 
             comment = self.votes[user.id]["incidents"][incident_id]["comment"]
 
-            report_text = (f"Date: {date}\nVoters:\n{voters_fmt}\n"
-                f"Votes total: {votes}\nincident_id: {incident_id}\n")
+            report_text = (f"**Date**: {date}\n**Voters**:\n{voters_fmt}\n"
+                f"**Votes Total**: *{votes}*\n**incident_id**: {incident_id}\n\n")
 
             embed.add_field(name=comment, value=report_text, inline=False)
             fields += 1
