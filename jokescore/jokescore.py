@@ -14,7 +14,7 @@ class JokeScore:
         self.bot = bot
         self.votes = {}  # trip nested dictionary boiiiiii
         self.expiry_time = 120  # Time in seconds until a vote expires
-        self.json_file = "data/jokescore/jokes.json"
+        self.json_file = "/data/jokescore/jokes.json"
         self.today = datetime.now().strftime('%d-%m-%Y')
 
         self.leaderboard_titles = [
@@ -55,7 +55,8 @@ class JokeScore:
                 with open(daily_file, "w") as votes:
                     json.dump(self.votes, votes)
         except OSError as e:
-            await self.bot.say(f"An Error Whilst Writing the Vote Tally. A {type(e).__name__} was raised:")
+            await self.bot.say(f"There Was an Error Whilst Writing the Vote Tally. A {type(e).__name__} was raised:")
+            traceback.print_exc()
 
     @commands.command(name="jokescore",
                       aliases=["js", "joke"], pass_context=True)
@@ -331,6 +332,7 @@ class JokeScore:
                 content="Copy of Jokescore JSON file.")
         except (OSError, discord.HTTPException):
             await self.bot.say(f"An Error Ocurred Whilst Sending the Backup File. A {type(e).__name__} was raised:")
+            traceback.print_exc()
 
 
 def setup(bot):
