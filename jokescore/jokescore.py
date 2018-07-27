@@ -51,7 +51,7 @@ class JokeScore:
         try:
             with open(self.json_file, "w") as votes:
                 json.dump(self.votes, votes)
-            if not os.isfile(daily_file):
+            if not os.path.isfile(daily_file):
                 with open(daily_file, "w") as votes:
                     json.dump(self.votes, votes)
         except OSError as e:
