@@ -321,7 +321,12 @@ class JokeScore:
         await self.save_votes()
 
         try:
-            await ctx.message.channel.send('Copy of JokeScore JSON File', file=discord.File(self.json_file, 'jokescore_backup.json'))
+            #  to be implemented when discord.py updated to the rewrite
+            #  await ctx.message.channel.send('Copy of JokeScore JSON File', file=discord.File(self.json_file, 'jokescore_backup.json'))
+            await self.bot.send_file(ctx.message.channel,
+                self.json_file,
+                filename="jokescore_backup.json",
+                content="Copy of Jokescore JSON file.")
         except (OSError, discord.HTTPException):
             await self.bot.say(f"An Error Ocurred Whilst Sending the Backup File. A {type(e).__name__} was raised:")
             traceback.print_exc()
