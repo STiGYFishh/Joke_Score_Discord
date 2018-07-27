@@ -37,8 +37,8 @@ class JokeScore:
             else:
                 with open(self.json_file, "r") as votes:
                     self.votes = json.load(votes)
-        except OSError as e:
-            await self.bot.say(f"An Error Ocurred During Setup. A {type(e).__name__} was raised:")
+        except OSError:
+            traceback.print_exc()
 
     async def save_votes(self):
         self.today = datetime.now().strftime('%d-%m-%Y')
@@ -54,7 +54,7 @@ class JokeScore:
             if not os.isfile(daily_file):
                 with open(daily_file, "w") as votes:
                     json.dump(self.votes, votes)
-        except OSError:
+        except OSError as e:
             await self.bot.say(f"An Error Whilst Writing the Vote Tally. A {type(e).__name__} was raised:")
 
     @commands.command(name="jokescore",
