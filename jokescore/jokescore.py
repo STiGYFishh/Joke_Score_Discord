@@ -38,8 +38,7 @@ class JokeScore:
                 with open(self.json_file, "r") as votes:
                     self.votes = json.load(votes)
         except OSError as e:
-            x = 1
-            await self.bot.say(f"An Error Occured During Startup. A {x} was raised:")
+            await self.bot.say(f"An Error Ocurred During Setup. A {type(e).__name__} was raised:")
 
     async def save_votes(self):
         self.today = datetime.now().strftime('%d-%m-%Y')
