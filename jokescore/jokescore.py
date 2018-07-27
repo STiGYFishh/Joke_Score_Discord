@@ -47,8 +47,9 @@ class JokeScore:
                 with open(self.json_file, "r") as votes:
                     self.votes = json.load(votes)
         except OSError as e:
+            await self.bot.say("An Error Occured During Startup. A {} was raised:\n```{}```"
+                .format(type(e).__name__, self.get_traceback(e)))
             traceback.print_exc()
-            await self.bot.say(f"An Error Occured During Startup. A {type(e).__name__} was raised:\n```{self.get_traceback(e)}```")
 
     async def save_votes(self):
         self.today = datetime.now().strftime('%d-%m-%Y')
@@ -65,8 +66,8 @@ class JokeScore:
                 with open(daily_file, "w") as votes:
                     json.dump(self.votes, votes)
         except OSError:
-            await self.bot.say("An Error occured whilst writing the vote tally."
-                f"A {type(e).__name__} was raised:\n```{self.get_traceback(e)}```")
+            await self.bot.say("An Error Whilst Writing the Vote Tally. A {} was raised:\n```{}```"
+                .format(type(e).__name__, self.get_traceback(e)))
             traceback.print_exc()
 
     @commands.command(name="jokescore",
@@ -342,8 +343,8 @@ class JokeScore:
                 filename="jokescore_backup.json", 
                 content="Copy of Jokescore JSON file.")
         except (OSError, discord.HTTPException):
-            await self.bot.say("An Error Ocurred Whilst Sending the Backup File"
-                f"A {type(e).__name__} was raised:\n```{self.get_traceback(e)}```")
+            await self.bot.say("An Error Ocurred Whilst Sending the Backup File. A {} was raised:\n```{}```"
+                .format(type(e).__name__, self.get_traceback(e)))
             traceback.print_exc()
 
 
