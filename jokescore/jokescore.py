@@ -38,14 +38,15 @@ class JokeScore:
                 with open(self.json_file, "r") as votes:
                     self.votes = json.load(votes)
         except OSError as e:
-            await self.bot.say(f"An Error Occured During Startup. A {type(e).__name__} was raised:")
+            x = 1
+            await self.bot.say(f"An Error Occured During Startup. A {x} was raised:")
 
     async def save_votes(self):
         self.today = datetime.now().strftime('%d-%m-%Y')
         filename = "".join(self.json_file.split("/")[-1:])
         #  One of yous did it. Disgaaaaassting.
         dir_parts = [x for x in self.json_file.split('/')[0:-1] if x is not '']
-        dir_path = ''.join([f'/{x}' for x in dir_parts ])
+        dir_path = ''.join([f'/{x}' for x in dir_parts])
 
         daily_file = f"{dir_path}/{self.today}_{filename}"
         try:
@@ -325,9 +326,9 @@ class JokeScore:
             return
 
         try:
-            self.bot.send_file(ctx.message.channel, 
-                self.json_file, 
-                filename="jokescore_backup.json", 
+            self.bot.send_file(ctx.message.channel,
+                self.json_file,
+                filename="jokescore_backup.json",
                 content="Copy of Jokescore JSON file.")
         except (OSError, discord.HTTPException):
             await self.bot.say(f"An Error Ocurred Whilst Sending the Backup File. A {type(e).__name__} was raised:")
