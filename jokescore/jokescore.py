@@ -42,12 +42,10 @@ class JokeScore:
 
     async def save_votes(self):
         self.today = datetime.now().strftime('%d-%m-%Y')
-        filename = "".join(self.json_file.split("/")[-1:])
-        #  One of yous did it. Disgaaaaassting.
-        dir_parts = [x for x in self.json_file.split('/')[0:-1] if x is not '']
-        dir_path = ''.join([f'{x}/' for x in dir_parts])
+        filename = os.path.basename(self.json_file)
+        dir_path = os.path.dirname(self.json_file)
+        daily_file = f"{dir_path}/{self.today}_{filename}"
 
-        daily_file = f"{dir_path}{self.today}_{filename}"
         try:
             with open(self.json_file, "w") as votes:
                 json.dump(self.votes, votes)
@@ -320,10 +318,7 @@ class JokeScore:
 
     @commands.command(name="jokescorelocalbackup", aliases=["jsbak"], pass_context=True)
     async def jokescore_local_backup(self, ctx):
-        try:
-            await self.save_votes()
-        except OSError:
-            return
+        await self.save_votes()
 
         try:
             self.bot.send_file(ctx.message.channel,
