@@ -39,14 +39,16 @@ class JokeScore:
                     self.votes = json.load(votes)
         except OSError:
             traceback.print_exc()
-            await self.bot.say("An Error Occured During Startup:\n"
-                f"```{traceback.print_exc()}```")
+            await self.bot.say(f"An Error Occured During Startup:\n```{traceback.print_exc()}```")
 
     async def save_votes(self):
         self.today = datetime.now().strftime('%d-%m-%Y')
         filename = "".join(self.json_file.split("/")[-1:])
         #  One of yous did it. Disgaaaaassting.
-        daily_file = f"{''.join([f'/{x}' for x in [x for x in self.json_file.split('/')[0:-1] if x is not '']])}/{self.today}_{filename}"
+        dir_parts = [x for x in self.json_file.split('/')[0:-1] if x is not '']
+        dir_path = ''.join([f'/{x}' for x in dir_parts ])
+        
+        daily_file = f"{dir_path}/{self.today}_{filename}"
         try:
             with open(self.json_file, "w") as votes:
                 json.dump(self.votes, votes)
