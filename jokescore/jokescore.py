@@ -120,7 +120,7 @@ class JokeScore:
             voters_fmt += f"*{voter}*: **{score:+d}**\n"
             total_score += score
         await self.bot.say(f'Joke Finished: "{comment}"\n\n{voters_fmt}\n'
-            f'*total*: **{total_score:+d}**{"-"*32}')
+            f'{"-"*32}\n*total*: **{total_score:+d}**')
         await self.bot.delete_message(poll)
 
         self.votes[user.id]["total"] += sum(self.votes[user.id]["incidents"][poll.id]["voters"].values())
