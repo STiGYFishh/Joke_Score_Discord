@@ -190,7 +190,7 @@ class JokeScore:
 
     @commands.command(name="jsdeluser", aliases=["jsdu"], pass_context=True)
     async def joke_score_delete_user(self, ctx, mention: str):
-        """ Delete a Previous Poll from a Users History """
+        """ Delete a User and all of their Polls """
         if len(ctx.message.mentions) == 0:
             await self.bot.say(
                 "You forgot to mention anyone "
@@ -318,6 +318,7 @@ class JokeScore:
 
     @commands.command(name="jokescorelocalbackup", aliases=["jsbak"], pass_context=True)
     async def jokescore_local_backup(self, ctx):
+        """ Create a backup of the database and send the file as an attachment. """
         await self.save_votes()
 
         try:
