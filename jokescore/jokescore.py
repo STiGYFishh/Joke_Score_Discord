@@ -61,8 +61,9 @@ class JokeScore:
     async def joke_score(self, ctx, mention: str, *, comment):
         """ Score everyone's jokes. """
         strongo = get(self.bot.get_all_emojis(), name='strongo')
+        russles = get(self.bot.get_all_emojis(), name='russles')
         reactions = {
-            "\N{POUTING FACE}":          -3,
+            russles:                     -3,
             "\N{ANGRY FACE}":            -2,
             "\N{UNAMUSED FACE}":         -1,
             "\N{SMIRKING FACE}":          1,
